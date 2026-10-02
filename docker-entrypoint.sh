@@ -6,7 +6,7 @@
 # at build time, before the mount existed. Without this, SQLite fails with
 # "unable to open database file".
 #
-# Requires the container to start as root, so we drop privileges via su-exec.
+# Requires the container to start as root, so we drop privileges via gosu.
 set -e
 
 DATA_DIR="${DATA_DIR:-/app/data}"
@@ -17,7 +17,7 @@ if [ "$(id -u)" = "0" ]; then
     chown -R marquee:marquee "$DATA_DIR" 2>/dev/null || true
     chmod 755 "$DATA_DIR" 2>/dev/null || true
 
-    exec su-exec marquee "$@"
+    exec gosu marquee "$@"
 fi
 
 # Already non-root (e.g. a platform that forces a user): just run.

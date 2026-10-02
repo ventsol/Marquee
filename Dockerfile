@@ -10,11 +10,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# su-exec lets the entrypoint drop from root to the unprivileged user at
-# runtime. Required because Railway mounts the volume as root AFTER the image
-# is built, so a build-time chown cannot take effect.
+# gosu lets the entrypoint drop from root to the unprivileged user at runtime.
+# Required because Railway mounts the volume as root AFTER the image is built,
+# so a build-time chown cannot take effect.
+# (su-exec is the Alpine equivalent; this is a Debian base, so use gosu.)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends su-exec \
+    && apt-get install -y --no-install-recommends gosu \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . .
