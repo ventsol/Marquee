@@ -1,0 +1,13 @@
+# Shell scripts MUST use LF. A CRLF shebang makes the kernel look for
+# "/bin/sh\r", which fails with a confusing "no such file or directory".
+*.sh text eol=lf
+
+# Batch files must stay CRLF for Windows cmd.exe.
+*.bat text eol=crlf
+
+# Dockerfiles and config are safer with LF.
+Dockerfile text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
