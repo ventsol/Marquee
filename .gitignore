@@ -11,3 +11,6 @@ backups/
 .marquee.lock
 .idea/
 .vscode/
+
+.git-commit-msg
+
