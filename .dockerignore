@@ -1,0 +1,25 @@
+# Keep secrets and local state out of the image entirely.
+.env
+.env.*
+!.env.example
+
+data/
+backups/
+*.db
+*.db-wal
+*.db-shm
+.marquee.lock
+
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+.git/
+.gitignore
+.dockerignore
+Dockerfile
+
+.idea/
+.vscode/
+*.log

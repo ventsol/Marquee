@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Marquee">
+  <title>Marquee</title>
+  <defs>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#6E79FF"/>
+      <stop offset="100%" stop-color="#3B44C0"/>
+    </linearGradient>
+
+    <!-- Bulb glow, single pass so it survives downscaling. -->
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Body: a rounded blob that nearly fills the canvas. Discord circle-masks
+       icons, so the silhouette must read inside an inscribed circle. -->
+  <rect x="24" y="24" width="464" height="464" rx="132" fill="url(#skin)"/>
+
+  <!-- Two little horn-antennae. These give the silhouette character at 32px,
+       where interior detail is lost but the outline still shows. -->
+  <g stroke="url(#skin)" stroke-width="26" stroke-linecap="round" fill="none">
+    <path d="M 176 92 L 152 40"/>
+    <path d="M 336 92 L 360 40"/>
+  </g>
+  <circle cx="148" cy="34" r="22" fill="#FFD93D"/>
+  <circle cx="364" cy="34" r="22" fill="#FFD93D"/>
+
+  <!-- Bulb ring hugging the inside edge: the marquee lights. -->
+  <g fill="#FFE66D" opacity="0.95" filter="url(#glow)">
+    <circle cx="256" cy="76"  r="15"/>
+    <circle cx="368" cy="106" r="15"/>
+    <circle cx="428" cy="200" r="15"/>
+    <circle cx="428" cy="312" r="15"/>
+    <circle cx="368" cy="406" r="15"/>
+    <circle cx="256" cy="436" r="15"/>
+    <circle cx="144" cy="406" r="15"/>
+    <circle cx="84"  cy="312" r="15"/>
+    <circle cx="84"  cy="200" r="15"/>
+    <circle cx="144" cy="106" r="15"/>
+  </g>
+
+  <!-- Eyes. Big, high-contrast, with highlights - this is what makes it a
+       character rather than a sign. Positioned above centre so the mouth has
+       room, and wide-set so the face reads even at 24px. -->
+  <g>
+    <circle cx="196" cy="252" r="62" fill="#FFFFFF"/>
+    <circle cx="316" cy="252" r="62" fill="#FFFFFF"/>
+    <circle cx="204" cy="260" r="30" fill="#12141C"/>
+    <circle cx="324" cy="260" r="30" fill="#12141C"/>
+    <circle cx="215" cy="248" r="11" fill="#FFFFFF"/>
+    <circle cx="335" cy="248" r="11" fill="#FFFFFF"/>
+  </g>
+
+  <!-- A small fanged grin. Simple enough to render at 32px. -->
+  <path d="M 226 340 Q 256 372 286 340"
+        fill="none" stroke="#12141C" stroke-width="17" stroke-linecap="round"/>
+  <g fill="#FFFFFF">
+    <path d="M 232 344 L 246 344 L 239 362 Z"/>
+    <path d="M 266 344 L 280 344 L 273 362 Z"/>
+  </g>
+</svg>

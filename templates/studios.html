@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Studios · Marquee{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1>Studios</h1>
+  <a class="btn btn-primary" href="/studios/new">Add studio</a>
+</div>
+
+<form class="filters card" method="get" action="/studios">
+  <input type="search" name="q" value="{{ q }}" placeholder="Search name or channel ID…">
+  <select name="genre">
+    <option value="">All genres</option>
+    {% for g in all_genres %}
+      <option value="{{ g }}" {% if genre_filter == g %}selected{% endif %}>{{ g }}</option>
+    {% endfor %}
+  </select>
+  <select name="region">
+    <option value="">All regions</option>
+    {% for r in regions %}
+      <option value="{{ r }}" {% if region_filter == r %}selected{% endif %}>{{ r }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit">Filter</button>
+  {% if q or genre_filter or region_filter %}
+    <a class="btn btn-ghost" href="/studios">Clear</a>
+  {% endif %}
+</form>
+
+<p class="muted small">
+  Showing {{ studios|length }} of {{ total }} studios. Saved to
+  <code>studios.toml</code>; a timestamped backup is written before every change.
+</p>
+
+{% if studios %}
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr><th>Name</th><th>Channel ID</th><th>Genres</th><th>Region</th><th>Feed</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for s in studios %}
+      <tr data-channel="{{ s.channel_id }}">
+        <td><strong>{{ s.name }}</strong></td>
+        <td><code class="small">{{ s.channel_id }}</code></td>
+        <td>
+          {% for g in s.genres %}
+            <span class="chip">{{ g }}</span>
+          {% else %}
+            <span class="muted small">untagged</span>
+          {% endfor %}
+        </td>
+        <td class="muted">{{ s.region }}</td>
+        <td class="feed-cell"><span class="dot dot-idle" title="Click Check to test"></span></td>
+        <td class="actions">
+          <a class="btn btn-sm" href="/studios/{{ s.channel_id }}/edit">Edit</a>
+          <form method="post" action="/studios/{{ s.channel_id }}/delete" class="inline"
+                onsubmit="return confirm('Delete {{ s.name }}? A backup will be written first.');">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <button class="btn" id="check-all">Check every feed</button>
+  <span class="muted small" id="check-progress"></span>
+</div>
+{% else %}
+<div class="card empty">
+  <p>No studios match those filters.</p>
+  <a class="btn btn-primary" href="/studios/new">Add a studio</a>
+</div>
+{% endif %}
+
+<script>
+document.getElementById("check-all")?.addEventListener("click", async (e) => {
+  const btn = e.target, prog = document.getElementById("check-progress");
+  btn.disabled = true; prog.textContent = "Testing all feeds (this can take a few seconds)…";
+  try {
+    const res = await fetch("/api/studios/bulk-test", {method: "POST"});
+    const data = await res.json();
+    prog.textContent = `${data.healthy}/${data.total} healthy` +
+      (data.failing.length ? ` — failing: ${data.failing.join(", ")}` : "");
+    prog.className = data.failing.length ? "small err-text" : "small ok-text";
+  } catch (err) {
+    prog.textContent = "Check failed: " + err;
+    prog.className = "small err-text";
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+{% endblock %}

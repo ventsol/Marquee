@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign in · Marquee{% endblock %}
+
+{% block content %}
+<div class="login-shell">
+  <form method="post" action="/login" class="card login-card">
+    <h1>🎬 Marquee</h1>
+    <p class="muted">Admin dashboard. Enter the password from <code>WEBAPP_PASSWORD</code>.</p>
+    <input type="hidden" name="next" value="{{ next }}">
+    <label>
+      Password
+      <input type="password" name="password" autofocus autocomplete="current-password" required>
+    </label>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+  </form>
+</div>
+{% endblock %}

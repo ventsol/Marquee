@@ -1,0 +1,14 @@
+discord.py>=2.4,<3.0
+httpx>=0.27,<1.0
+feedparser>=6.0,<7.0
+apscheduler>=3.10,<4.0
+aiosqlite>=0.20,<1.0
+python-dotenv>=1.0,<2.0
+tomlkit>=0.13,<1.0
+
+# Web dashboard (app.py)
+fastapi>=0.115
+uvicorn[standard]>=0.32
+jinja2>=3.1
+itsdangerous>=2.2
+python-multipart>=0.0.20

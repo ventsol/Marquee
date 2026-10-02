@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Backups · Marquee{% endblock %}
+
+{% block content %}
+<h1>Backups</h1>
+<p class="muted small">
+  A timestamped copy of <code>studios.toml</code> is written before every add,
+  edit, delete, or restore. Restoring also backs up the current file first, so
+  you can always undo an undo.
+</p>
+
+{% if backups %}
+<div class="card">
+  <table class="table">
+    <thead><tr><th>File</th><th>Size</th><th>Modified (UTC)</th><th></th></tr></thead>
+    <tbody>
+      {% for b in backups %}
+      <tr>
+        <td><code class="small">{{ b.name }}</code></td>
+        <td class="muted nowrap">{{ b.size }} B</td>
+        <td class="muted nowrap">{{ b.modified[:19] }}</td>
+        <td>
+          <form method="post" action="/backups/restore" class="inline"
+                onsubmit="return confirm('Restore {{ b.name }}? The current studios.toml will be backed up first.');">
+            <input type="hidden" name="name" value="{{ b.name }}">
+            <button class="btn btn-sm" type="submit">Restore</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty">
+  <p>No backups yet. One is created the first time you change a studio.</p>
+  <a class="btn" href="/studios">Go to studios</a>
+</div>
+{% endif %}
+{% endblock %}

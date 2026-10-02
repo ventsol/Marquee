@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Marquee{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+{% include "_status_card.html" %}
+
+<div class="grid grid-4">
+  <div class="card metric">
+    <span class="metric-num">{{ studios_count }}</span>
+    <span class="metric-label">Studios watched</span>
+  </div>
+  <div class="card metric">
+    <span class="metric-num">{{ seen_count }}</span>
+    <span class="metric-label">Trailers tracked</span>
+  </div>
+  <div class="card metric">
+    <span class="metric-num">{{ guild_count }}</span>
+    <span class="metric-label">Guilds configured</span>
+  </div>
+  <div class="card metric">
+    <span class="metric-num">{{ poll_interval }}m</span>
+    <span class="metric-label">Poll interval</span>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Actions</h2>
+    <p class="muted">
+      Filter mode <code>{{ filter_mode }}</code> ·
+      seed quietly <code>{{ 'on' if seed_quietly else 'off' }}</code>
+    </p>
+    <div class="row">
+      <button class="btn btn-primary" id="refresh-btn"
+              {% if not bot_enabled %}disabled title="Bot is not running in this process"{% endif %}>
+        Poll all feeds now
+      </button>
+      <button class="btn" id="bulk-test-btn">Check all feeds</button>
+      <a class="btn btn-ghost" href="/studios/new">Add studio</a>
+    </div>
+    <pre class="result" id="refresh-result"></pre>
+    <pre class="result" id="bulk-test-result"></pre>
+    {% if not bot_enabled %}
+      <p class="muted small">
+        Bot is disabled in this process (<code>WEBAPP_RUN_BOT=false</code>) — polling needs a live bot.
+      </p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Last poll</h2>
+    {% if status.last_poll.finished_at %}
+      <dl class="kv">
+        <dt>Trigger</dt><dd>{{ status.last_poll.trigger }}</dd>
+        <dt>Finished</dt><dd>{{ status.last_poll.finished_at[:19] }}Z</dd>
+        <dt>Duration</dt>
+        <dd>{{ "%.1f"|format(status.last_poll.duration_seconds or 0) }}s</dd>
+        <dt>Fetched</dt><dd>{{ status.last_poll.fetched }}</dd>
+        <dt>New</dt><dd>{{ status.last_poll.new }}</dd>
+        <dt>Announced</dt><dd>{{ status.last_poll.announced }}</dd>
+        {% if status.last_poll.seeded %}
+          <dt>Seeded silently</dt><dd>{{ status.last_poll.seeded }}</dd>
+        {% endif %}
+      </dl>
+      {% if status.last_poll.errors %}
+        <div class="alert alert-err small">
+          {% for e in status.last_poll.errors %}<div>{{ e }}</div>{% endfor %}
+        </div>
+      {% endif %}
+    {% else %}
+      <p class="muted">No poll has completed in this process yet.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>Recent trailers</h2>
+  {% if recent %}
+    <table class="table">
+      <thead><tr><th></th><th>Title</th><th>Studio</th><th>Published</th><th></th></tr></thead>
+      <tbody>
+        {% for r in recent %}
+        <tr>
+          <td><img class="thumb" src="https://i.ytimg.com/vi/{{ r['video_id'] }}/mqdefault.jpg" alt="" loading="lazy"></td>
+          <td>{{ r['title'][:90] }}</td>
+          <td>{{ r['studio'] }}</td>
+          <td class="nowrap muted">{{ r['published_at'][:10] }}</td>
+          <td><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener"
+                 href="https://youtu.be/{{ r['video_id'] }}">Open</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">Nothing ingested yet. Trigger a poll to populate this.</p>
+  {% endif %}
+  <p><a href="/activity">View all activity →</a></p>
+</div>
+
+<script>
+async function post(url, btn, out, busy) {
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = busy; out.textContent = "";
+  try {
+    const res = await fetch(url, {method: "POST"});
+    const data = await res.json();
+    out.textContent = JSON.stringify(data, null, 2);
+    out.className = "result " + (res.ok && data.ok !== false ? "ok" : "err");
+  } catch (e) {
+    out.textContent = "Request failed: " + e;
+    out.className = "result err";
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+}
+const rb = document.getElementById("refresh-btn");
+if (rb) rb.addEventListener("click", () =>
+  post("/api/refresh", rb, document.getElementById("refresh-result"), "Polling…"));
+const bt = document.getElementById("bulk-test-btn");
+if (bt) bt.addEventListener("click", () =>
+  post("/api/studios/bulk-test", bt, document.getElementById("bulk-test-result"), "Checking…"));
+</script>
+{% endblock %}

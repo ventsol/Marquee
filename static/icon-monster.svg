@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="Marquee">
+  <title>Marquee</title>
+  <defs>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#6E79FF"/>
+      <stop offset="100%" stop-color="#3B44C0"/>
+    </linearGradient>
+
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!--
+    Discord circle-crops avatars. Centre is (512,512), so the usable area is
+    the inscribed circle of radius 512. Everything below is placed with a
+    safety radius of ~470 (92% of 512) so the glow has room and nothing clips.
+
+    The body is a full-bleed circle rather than a rounded square: a squircle's
+    corners are exactly what the crop removes, so a circle loses nothing.
+  -->
+  <circle cx="512" cy="512" r="512" fill="url(#skin)"/>
+
+  <!-- Antennae. Tips sit at radius ~455 from centre, comfortably inside. -->
+  <g stroke="url(#skin)" stroke-width="52" stroke-linecap="round" fill="none">
+    <path d="M 372 232 L 320 140"/>
+    <path d="M 652 232 L 704 140"/>
+  </g>
+  <circle cx="316" cy="128" r="46" fill="#FFD93D"/>
+  <circle cx="708" cy="128" r="46" fill="#FFD93D"/>
+
+  <!--
+    Bulb ring. Placed on a circle of radius 372, so all ten bulbs stay inside
+    the mask with margin. Each bulb centre is 372*cos/sin of a 36-degree step.
+  -->
+  <g fill="#FFE66D" opacity="0.95" filter="url(#glow)">
+    <circle cx="512"   cy="140" r="30"/>
+    <circle cx="730.7" cy="211" r="30"/>
+    <circle cx="813.0" cy="412" r="30"/>
+    <circle cx="813.0" cy="612" r="30"/>
+    <circle cx="730.7" cy="813" r="30"/>
+    <circle cx="512"   cy="884" r="30"/>
+    <circle cx="293.3" cy="813" r="30"/>
+    <circle cx="211.0" cy="612" r="30"/>
+    <circle cx="211.0" cy="412" r="30"/>
+    <circle cx="293.3" cy="211" r="30"/>
+  </g>
+
+  <!-- Eyes. Wide-set and high so the face reads even at 24px. -->
+  <g>
+    <circle cx="392" cy="512" r="124" fill="#FFFFFF"/>
+    <circle cx="632" cy="512" r="124" fill="#FFFFFF"/>
+    <circle cx="408" cy="528" r="60" fill="#12141C"/>
+    <circle cx="648" cy="528" r="60" fill="#12141C"/>
+    <circle cx="430" cy="504" r="22" fill="#FFFFFF"/>
+    <circle cx="670" cy="504" r="22" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Grin with two fangs. Bottom of the mouth reaches radius ~730/1024,
+       well inside the mask. -->
+  <path d="M 452 692 Q 512 756 572 692"
+        fill="none" stroke="#12141C" stroke-width="34" stroke-linecap="round"/>
+  <g fill="#FFFFFF">
+    <path d="M 464 700 L 492 700 L 478 736 Z"/>
+    <path d="M 532 700 L 560 700 L 546 736 Z"/>
+  </g>
+</svg>

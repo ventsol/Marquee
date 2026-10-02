@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if mode == 'edit' else 'New' }} studio · Marquee{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1>{{ 'Edit studio' if mode == 'edit' else 'Add studio' }}</h1>
+  <a class="btn btn-ghost" href="/studios">← Back</a>
+</div>
+
+{% if issues %}
+  {% for i in issues %}
+    <div class="alert {{ 'alert-err' if i.severity == 'error' else 'alert-warn' }}">
+      <strong>{{ i.field }}:</strong> {{ i.message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" action="/studios/save" class="card form">
+  <input type="hidden" name="mode" value="{{ mode }}">
+  <input type="hidden" name="original_channel_id" value="{{ studio.original_channel_id or '' }}">
+
+  <label>
+    Studio name
+    <input type="text" name="name" value="{{ studio.name }}" required maxlength="100"
+           placeholder="A24">
+  </label>
+
+  <label>
+    YouTube channel ID
+    <input type="text" name="channel_id" id="channel_id" value="{{ studio.channel_id }}"
+           required pattern="UC[A-Za-z0-9_\-]{22}" placeholder="UCuPivVjnfNo4mb3Oog_frZg">
+    <span class="hint">
+      Open the channel page → View Source → search <code>externalId</code>.
+      24 characters, starts with <code>UC</code>.
+    </span>
+  </label>
+
+  <div class="row">
+    <button class="btn" type="button" id="test-feed">Test feed</button>
+    <span id="test-result" class="small"></span>
+  </div>
+
+  <fieldset>
+    <legend>Genres</legend>
+    <p class="hint">Trailers from this studio ping everyone holding any of these roles.</p>
+    <div class="chips">
+      {% for g in all_genres %}
+        <label class="chip-check">
+          <input type="checkbox" name="genres" value="{{ g }}"
+                 {% if g in studio.genres %}checked{% endif %}>
+          <span>{{ g }}</span>
+        </label>
+      {% endfor %}
+    </div>
+    <label class="mt">
+      Extra genres (comma separated, new ones are created)
+      <input type="text" name="custom_genre" placeholder="kaiju, noir">
+    </label>
+  </fieldset>
+
+  <label>
+    Region
+    <input type="text" name="region" value="{{ studio.region or 'en' }}" maxlength="10"
+           placeholder="en">
+    <span class="hint">Free-form tag, e.g. <code>en</code>, <code>in</code>, <code>jp</code>.</span>
+  </label>
+
+  <div class="row">
+    <button class="btn btn-primary" type="submit">
+      {{ 'Save changes' if mode == 'edit' else 'Add studio' }}
+    </button>
+    <a class="btn btn-ghost" href="/studios">Cancel</a>
+  </div>
+</form>
+
+<script>
+const input = document.getElementById("channel_id");
+const out = document.getElementById("test-result");
+document.getElementById("test-feed").addEventListener("click", async (e) => {
+  const btn = e.target;
+  btn.disabled = true;
+  out.textContent = "Checking…"; out.className = "small";
+  try {
+    const res = await fetch("/api/studios/test", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({channel_id: input.value.trim()}),
+    });
+    const data = await res.json();
+    out.textContent = data.message;
+    out.className = "small " + (data.ok ? "ok-text" : "err-text");
+  } catch (err) {
+    out.textContent = "Request failed: " + err;
+    out.className = "small err-text";
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+{% endblock %}

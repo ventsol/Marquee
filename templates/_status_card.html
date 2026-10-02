@@ -1,0 +1,36 @@
+{% set s = status %}
+<div class="status-strip" id="status-strip"
+     hx-get="/api/status/card" hx-trigger="every 5s" hx-swap="outerHTML">
+  <div class="stat">
+    <span class="stat-label">Bot</span>
+    <span class="stat-value">
+      {% if s.bot_ready %}<span class="dot dot-ok"></span>{{ s.bot_user }}
+      {% elif s.ready %}<span class="dot dot-warn"></span>connecting
+      {% else %}<span class="dot dot-err"></span>offline{% endif %}
+    </span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Latency</span>
+    <span class="stat-value">{{ s.latency_ms if s.latency_ms is not none else "—" }}{% if s.latency_ms is not none %} ms{% endif %}</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Guilds</span>
+    <span class="stat-value">{{ s.guild_count }}</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Scheduler</span>
+    <span class="stat-value">
+      {% if s.scheduler_running %}<span class="dot dot-ok"></span>running
+      {% else %}<span class="dot dot-warn"></span>stopped{% endif %}
+    </span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Last poll</span>
+    <span class="stat-value">
+      {% if s.last_poll.running %}<span class="dot dot-warn"></span>in progress…
+      {% elif s.last_poll.finished_at %}
+        {{ s.last_poll.new }} new / {{ s.last_poll.announced }} posted
+      {% else %}never{% endif %}
+    </span>
+  </div>
+</div>

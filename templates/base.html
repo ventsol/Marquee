@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Marquee{% endblock %}</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/static/icon-64.png">
+  <link rel="apple-touch-icon" href="/static/icon-256.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/static/icon.svg" alt="" width="26" height="26">
+      <span class="brand-name">Marquee</span>
+    </a>
+    <nav class="nav">
+      <a href="/"          class="{% if request.url.path == '/' %}active{% endif %}">Dashboard</a>
+      <a href="/studios"   class="{% if request.url.path.startswith('/studios') %}active{% endif %}">Studios</a>
+      <a href="/genres"    class="{% if request.url.path.startswith('/genres') %}active{% endif %}">Genres</a>
+      <a href="/activity"  class="{% if request.url.path.startswith('/activity') %}active{% endif %}">Activity</a>
+      <a href="/backups"   class="{% if request.url.path.startswith('/backups') %}active{% endif %}">Backups</a>
+    </nav>
+    <form method="post" action="/logout" class="logout">
+      <button type="submit" class="btn btn-ghost">Sign out</button>
+    </form>
+  </header>
+
+  <main class="wrap">
+    {% if flash %}<div class="alert alert-ok">{{ flash }}</div>{% endif %}
+    {% if error %}<div class="alert alert-err">{{ error }}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="foot">
+    <span>{{ studios_count }} studios · {{ all_genres|length }} genres in use</span>
+  </footer>
+</body>
+</html>

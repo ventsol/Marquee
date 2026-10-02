@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Activity · Marquee{% endblock %}
+
+{% block content %}
+<h1>Activity</h1>
+<p class="muted small">
+  The {{ limit }} most recent videos the bot has ingested and considered.
+  Filtering happens before this list, so everything here is trailer-shaped.
+</p>
+
+{% if rows %}
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr><th></th><th>Title</th><th>Studio</th><th>Published</th><th>First seen</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td><img class="thumb" src="https://i.ytimg.com/vi/{{ r['video_id'] }}/mqdefault.jpg" alt="" loading="lazy"></td>
+        <td>{{ r['title'][:110] }}</td>
+        <td>{{ r['studio'] }}</td>
+        <td class="nowrap muted">{{ r['published_at'][:10] }}</td>
+        <td class="nowrap muted small">{{ r['first_seen_at'][:19] }}</td>
+        <td><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener"
+               href="https://youtu.be/{{ r['video_id'] }}">Open</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty">
+  <p>No activity recorded yet.</p>
+  <a class="btn" href="/">Back to dashboard</a>
+</div>
+{% endif %}
+{% endblock %}

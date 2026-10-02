@@ -1,0 +1,353 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# studios.toml — curated registry of official studio YouTube channels.
+#
+# Adding a studio = add one [[studio]] block. No code changes required.
+#
+#   name       = studio label shown in the embed footer
+#   channel_id = YouTube channel ID (starts with "UC", 24 chars)
+#   genres     = genre tags used for genre-role routing
+#   region     = optional; "en" (default), "in", "jp", ...
+#
+# Every channel_id below was verified against its live RSS feed.
+# Re-verify any time with:  python -m tools.validate_studios
+#
+# To find a channel id: open the channel page -> View Source -> search "externalId"
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Major English-language studios ───────────────────────────────────────────
+[[studio]]
+name = "A24"
+channel_id = "UCuPivVjnfNo4mb3Oog_frZg"
+genres = ["indie", "horror", "drama"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Blumhouse"
+channel_id = "UCCEfOHkckMXnoZQAjUZsMig"
+genres = ["horror", "thriller"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Marvel Entertainment"
+channel_id = "UCvC4D8onUfXzvjTOM-dBfEA"
+genres = ["action", "sci-fi"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "DC"
+channel_id = "UCiifkYAs_bq1pt_zbNAzYGg"
+genres = ["action", "sci-fi"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Warner Bros. Pictures"
+channel_id = "UCjmJDM5pRKbUlVIzDYYWb6g"
+genres = ["action", "drama", "thriller"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Universal Pictures"
+channel_id = "UCq0OueAsdxH6b8nyAspwViw"
+genres = ["action", "drama", "comedy"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Sony Pictures Entertainment"
+channel_id = "UCz97F7dMxBNOfGYu3rx8aCw"
+genres = ["action", "comedy", "thriller"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Paramount Pictures"
+channel_id = "UCF9imwPMSGz4Vq1NiTWCC7g"
+genres = ["action", "drama", "sci-fi"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Walt Disney Studios"
+channel_id = "UC_5niPa-d35gg88HaS7RrIw"
+genres = ["animation", "family", "action"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Lionsgate Movies"
+channel_id = "UCJ6nMHaJPZvsJ-HmUmj1SeA"
+genres = ["horror", "action", "thriller"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "NEON"
+channel_id = "UCpy5dRhZd-JbZP4NsrnLt1w"
+genres = ["indie", "horror", "drama"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Searchlight Pictures"
+channel_id = "UCor9rW6PgxSQ9vUPWQdnaYQ"
+genres = ["drama", "indie", "comedy"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Focus Features"
+channel_id = "UCU4SM3j_9TNWaSu8KdGV50g"
+genres = ["drama", "indie"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "STXfilms"
+channel_id = "UCtlp8d4cZg2eMrVbq7vxg9w"
+genres = ["action", "comedy", "thriller"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "DreamWorks Animation"
+channel_id = "UCY26xU0-avwTJ6F6TzUZVEw"
+genres = ["animation", "family", "comedy"]
+region = "en"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[[studio]]
+name = "Pixar"
+channel_id = "UC_IRYSp4auq7hKLvziWVH6w"
+genres = ["animation", "family"]
+region = "en"
+
+# ── Indian cinema (Hindi / Tamil / Telugu / Kannada) ─────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
