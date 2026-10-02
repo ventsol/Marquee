@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -44,14 +45,58 @@ ROOT = Path(__file__).parent
 TEMPLATES = Jinja2Templates(directory=str(ROOT / "templates"))
 
 
+def _refuse_missing_password() -> None:
+    """Fail loudly, with instructions that match where the app is running.
+
+    The old message said "add it to .env", which is useless in a container
+    where no .env exists. Detect the hosting context and say the right thing.
+    """
+    on_platform = bool(os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("PORT"))
+    host = os.getenv("RAILWAY_SERVICE_NAME") or "your host"
+
+    lines = ["", "=" * 62, "  WEBAPP_PASSWORD is not set. Refusing to start.", "=" * 62, ""]
+
+    if on_platform:
+        lines += [
+            "  This looks like a hosted deployment, so there is no .env file.",
+            "  Set it as an environment variable instead:",
+            "",
+            f"    Railway dashboard -> {host} -> Variables -> New Variable",
+            "      WEBAPP_PASSWORD = <a long random string>",
+            "",
+            "  Or with the CLI, from the project directory:",
+            "",
+            '    railway variables --set "WEBAPP_PASSWORD=<value>"',
+            "",
+            "  Also set DISCORD_TOKEN if you have not already.",
+        ]
+    else:
+        lines += [
+            "  Create a .env file next to app.py, or run .\\setup_test.bat",
+            "  which generates one for you.",
+            "",
+            "      WEBAPP_PASSWORD=<a long random string>",
+        ]
+
+    lines += [
+        "",
+        "  The dashboard can rewrite studios.toml and delete studios,",
+        "  so it will not run without a password.",
+        "=" * 62,
+        "",
+    ]
+
+    for line in lines:
+        print(line, flush=True)
+    raise SystemExit(1)
+
+
+
 # ── Lifespan ─────────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if not auth.password_configured():
-        raise RuntimeError(
-            "WEBAPP_PASSWORD is not set. Add it to .env before starting the "
-            "dashboard — it can rewrite studios.toml, so it is not optional."
-        )
+        _refuse_missing_password()
 
     await db.connect()
     log.info("Database ready")
